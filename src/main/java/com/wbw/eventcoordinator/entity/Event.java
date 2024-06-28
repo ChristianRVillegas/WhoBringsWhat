@@ -33,7 +33,8 @@ public class Event {
     private List<Item> items;
 
     // Constructors
-    public Event() {}
+    //first is used only by jpa, which is what our repository class extends - make it protected
+    protected Event() {}
 
     public Event(String name, String description, String date, String time, User user) {
         this.name = name;

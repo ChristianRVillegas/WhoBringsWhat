@@ -26,6 +26,16 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    @GetMapping
+    public List<User> getUserByName(@RequestBody String name) {
+        return userService.getUserByName(name);
+    }
+
+    @GetMapping
+    public User getUserByEmail(@RequestBody String email) {
+        return userService.getUserByEmail(email);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> user = userService.getUserById(id);

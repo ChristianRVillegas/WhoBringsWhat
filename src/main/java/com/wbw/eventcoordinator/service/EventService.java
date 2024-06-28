@@ -26,6 +26,10 @@ public class EventService {
         return eventRepository.findById(id);
     }
 
+    public List<Event> getEventByName(String name) {
+        return eventRepository.findByName(name);
+    }
+
     public Event updateEvent(Long id, Event eventDetails) {
         return eventRepository.findById(id).map(event -> {
             event.setName(eventDetails.getName());
