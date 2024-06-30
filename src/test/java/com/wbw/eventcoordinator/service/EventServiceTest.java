@@ -30,12 +30,11 @@ public class EventServiceTest {
     @Mock
     private EventRepository eventRepository;
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
     public EventServiceTest() {
         MockitoAnnotations.openMocks(this);
     }
+
+    //TODO: add a beforeEach setup function for these tests
 
     @Test
     public void testCreateEvent() {
