@@ -5,7 +5,6 @@ import com.wbw.eventcoordinator.entity.Event;
 import com.wbw.eventcoordinator.service.EventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,7 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -36,21 +37,22 @@ public class EventControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private Event eventA;
-    private Event eventB;
+    public Event eventA, eventB;
+
+
 
     @BeforeEach
     public void setup() {
-        Event eventA = new Event("EventA", "description1", LocalDate.of(2023, 6, 17).toString(), LocalTime.of(18, 0).toString(), null);
+        eventA = new Event("EventA", "description1", LocalDate.of(2023, 6, 17).toString(), LocalTime.of(18, 0).toString(), null);
         eventA.setId(1L);
 
-        Event eventB = new Event("EventB", "description2", LocalDate.of(2023, 6, 17).toString(), LocalTime.of(18, 0).toString(), null);
+        eventB = new Event("EventB", "description2", LocalDate.of(2023, 6, 17).toString(), LocalTime.of(18, 0).toString(), null);
         eventB.setId(2L);
 
         when(eventService.createEvent(any(Event.class))).thenReturn(eventA);
         when(eventService.getEventById(1L)).thenReturn(Optional.of(eventA));
         when(eventService.getAllEvents()).thenReturn(Arrays.asList(eventA, eventB));
-        doNothing().when(eventService).deleteEvent(1L);
+        doNothing().when(eventService).deleteEventById(1L);
     }
 
     @Test
@@ -69,7 +71,7 @@ public class EventControllerTests {
                 .andExpect(jsonPath("$.name").value("Event3"))
                 .andExpect(jsonPath("$.description").value("description3"));
 
-        verify(eventService, times(1)).createEvent(any(Event.class));
+        verify(eventService).createEvent(any(Event.class));
     }
 
     @Test
@@ -94,12 +96,33 @@ public class EventControllerTests {
 
     @Test
     @WithMockUser(username = "user1", roles = "USER")
-    public void testDeleteEvent() throws Exception {
+    public void testGetEventByName() throws Exception {
+
+        List<Event> mockList = new ArrayList<Event>();
+
+        mockList.add(eventA);
+        mockList.add(eventB);
+
+
+        when(eventService.getEventByName("cornball")).thenReturn(mockList);
+
+        mockMvc.perform(get("/api/events/name/cornball")
+                .contentType(MediaType.APPLICATION_JSON).
+                        with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[0].name").value("EventA"))
+                .andExpect(jsonPath("$[1].name").value("EventB"));
+    }
+
+    @Test
+    @WithMockUser(username = "user1", roles = "USER")
+    public void testDeleteEventById() throws Exception {
         mockMvc.perform(delete("/api/events/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(SecurityMockMvcRequestPostProcessors.csrf())) // Add CSRF token
                 .andExpect(status().isNoContent());
 
-        verify(eventService, times(1)).deleteEvent(1L);
+        verify(eventService, times(1)).deleteEventById(1L);
     }
 }

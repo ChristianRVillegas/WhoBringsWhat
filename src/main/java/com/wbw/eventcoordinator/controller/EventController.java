@@ -26,8 +26,8 @@ public class EventController {
         return eventService.getAllEvents();
     }
 
-    @GetMapping
-    public List<Event> getEventByName(@RequestBody String name) {
+    @GetMapping("name/{name}")
+    public List<Event> getEventByName(@PathVariable String name) {
         return eventService.getEventByName(name);
     }
 
@@ -49,7 +49,7 @@ public class EventController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
-        eventService.deleteEvent(id);
+        eventService.deleteEventById(id);
         return ResponseEntity.noContent().build();
     }
 }

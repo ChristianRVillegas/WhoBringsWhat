@@ -40,7 +40,7 @@ public class EventService {
         }).orElseThrow(() -> new RuntimeException("Event not found with id " + id));
     }
 
-    public void deleteEvent(Long id) {
+    public void deleteEventById(Long id) {
         eventRepository.deleteById(id);
     }
 }
