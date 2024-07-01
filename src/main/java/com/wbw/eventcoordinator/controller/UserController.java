@@ -26,23 +26,23 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping
-    public List<User> getUserByName(@RequestBody String name) {
+    @GetMapping("/name/{name}")
+    public List<User> getUserByName(@PathVariable String name) {
         return userService.getUserByName(name);
     }
 
-    @GetMapping
-    public User getUserByEmail(@RequestBody String email) {
+    @GetMapping("/email/{email}")
+    public User getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> user = userService.getUserById(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/id/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         try {
             User updatedUser = userService.updateUser(id, userDetails);
@@ -52,7 +52,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();

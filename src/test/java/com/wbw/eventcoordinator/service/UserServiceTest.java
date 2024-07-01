@@ -34,11 +34,8 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-
     public UserServiceTest() {
         MockitoAnnotations.openMocks(this);
-
-
     }
 
     @Test
@@ -52,7 +49,6 @@ public class UserServiceTest {
         assertEquals("test@example.com", response.getEmail());
 
         verify(userRepository).save(user);
-
     }
 
     @Test
@@ -67,7 +63,6 @@ public class UserServiceTest {
         assertEquals("testuser", foundUser.get().getUsername());
         verify(userRepository, times(1)).findById(1L);
     }
-
 
     @Test
     public void testGetAllUsers() {
@@ -90,7 +85,6 @@ public class UserServiceTest {
         assertEquals("testuserB", response.get(1).getUsername());
 
         verify(userRepository).findAll();
-
     }
 
     @Test
@@ -113,7 +107,6 @@ public class UserServiceTest {
         assertEquals("testuserB", response.get(1).getUsername());
 
         verify(userRepository).findByUsername("testuser");
-
     }
 
     @Test
@@ -159,7 +152,5 @@ public class UserServiceTest {
         doNothing().when(userRepository).deleteById(anyLong());
         userService.deleteUser(1L);
         verify(userRepository).deleteById(1L);
-
-
     }
 }
